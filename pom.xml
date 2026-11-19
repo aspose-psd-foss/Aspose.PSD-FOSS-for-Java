@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.aspose</groupId>
+  <artifactId>aspose-psd-foss</artifactId>
+  <version>26.11.0</version>
+  <packaging>jar</packaging>
+
+  <name>Aspose.PSD FOSS for Java</name>
+  <description>Open-source (MIT) Java library for loading, inspecting and saving Adobe Photoshop PSD and PSB files: document properties, layer metadata and image resources. It does not render or convert images.</description>
+  <url>https://github.com/aspose-psd-foss/Aspose.PSD-FOSS-for-Java</url>
+
+  <licenses>
+    <license><name>MIT License</name><url>https://opensource.org/licenses/MIT</url><distribution>repo</distribution></license>
+  </licenses>
+  <developers>
+    <developer><name>Aspose</name><organization>Aspose Pty Ltd</organization><organizationUrl>https://www.aspose.com/</organizationUrl></developer>
+  </developers>
+  <scm>
+    <url>https://github.com/aspose-psd-foss/Aspose.PSD-FOSS-for-Java</url>
+    <connection>scm:git:https://github.com/aspose-psd-foss/Aspose.PSD-FOSS-for-Java.git</connection>
+    <developerConnection>scm:git:https://github.com/aspose-psd-foss/Aspose.PSD-FOSS-for-Java.git</developerConnection>
+  </scm>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.build.outputTimestamp>2026-11-19T00:00:00Z</project.build.outputTimestamp>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
+    <maven.compiler.release>11</maven.compiler.release>
+  </properties>
+
+  <dependencies>
+    <dependency><groupId>org.junit.jupiter</groupId><artifactId>junit-jupiter</artifactId><version>5.10.2</version><scope>test</scope></dependency>
+  </dependencies>
+
+  <build>
+    <sourceDirectory>main</sourceDirectory>
+    <testSourceDirectory>test/java</testSourceDirectory>
+    <testResources>
+      <testResource><directory>test/resources</directory></testResource>
+    </testResources>
+    <resources>
+    </resources>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId><version>3.13.0</version>
+        <configuration>
+          <source>11</source><target>11</target><release>11</release><encoding>UTF-8</encoding><fork>true</fork>
+          <meminitial>512m</meminitial><maxmem>1500m</maxmem><showWarnings>false</showWarnings><debug>true</debug>
+          <compilerArgs><arg>-Xmaxerrs</arg><arg>100000</arg><arg>-Xmaxwarns</arg><arg>0</arg></compilerArgs>
+          <excludes><exclude>java/samples/**</exclude></excludes>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId><version>3.2.5</version>
+      </plugin>
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId><version>3.4.1</version>
+        <configuration><archive>
+          <addMavenDescriptor>false</addMavenDescriptor>
+          <manifestEntries>
+            <Implementation-Title>Aspose.PSD FOSS for Java</Implementation-Title>
+            <Implementation-Vendor>Aspose Pty Ltd</Implementation-Vendor>
+            <Implementation-Version>${project.version}</Implementation-Version>
+          </manifestEntries>
+        </archive></configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-source-plugin</artifactId><version>3.4.0</version>
+        <configuration><excludes><exclude>java/samples/**</exclude></excludes></configuration>
+        <executions><execution><id>attach-sources</id><goals><goal>jar-no-fork</goal></goals></execution></executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId><version>3.12.0</version>
+        <configuration><outputDirectory>${project.build.directory}/apidocs</outputDirectory><failOnError>false</failOnError><quiet>true</quiet><sourceFileExcludes><sourceFileExclude>java/samples/**</sourceFileExclude></sourceFileExcludes><additionalOptions><additionalOption>-Xdoclint:none</additionalOption></additionalOptions></configuration>
+        <executions><execution><id>attach-javadocs</id><goals><goal>jar</goal></goals></execution></executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-gpg-plugin</artifactId><version>3.2.8</version>
+        <configuration><keyname>E176D5CBCA1DCC62</keyname><passphraseEnvName>GPG_PASSPHRASE</passphraseEnvName></configuration>
+        <executions><execution><id>sign-artifacts</id><phase>verify</phase><goals><goal>sign</goal></goals></execution></executions>
+      </plugin>
+      <plugin>
+        <groupId>org.sonatype.central</groupId><artifactId>central-publishing-maven-plugin</artifactId><version>0.11.0</version><extensions>true</extensions>
+        <configuration><publishingServerId>central</publishingServerId><autoPublish>true</autoPublish><waitUntil>published</waitUntil></configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
