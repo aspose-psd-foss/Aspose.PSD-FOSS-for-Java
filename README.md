@@ -1,135 +1,355 @@
-# Aspose.PSD FOSS Java
+# Aspose.PSD FOSS for Java
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.aspose.psd/aspose-psd-foss-java/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.aspose.psd/aspose-psd-foss-java)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Maven Central](https://img.shields.io/maven-central/v/org.aspose/aspose-psd-foss.svg)](https://central.sonatype.com/artifact/org.aspose/aspose-psd-foss) [![Java Version](https://img.shields.io/badge/Java-11%2B-blue.svg)](#dependencies) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![Contributors](https://img.shields.io/github/contributors/aspose-psd-foss/Aspose.PSD-FOSS-for-Java.svg)](https://github.com/aspose-psd-foss/Aspose.PSD-FOSS-for-Java/graphs/contributors)
 
-FOSS implementation of Aspose.PSD for Java - A high-performance API for working with PSD and PSB files.
+[![Aspose.PSD FOSS for Java](https://products.aspose.org/media/psd/java/banner-readme.png)](https://products.aspose.org/psd/java/)
 
-## Getting started
+Aspose.PSD FOSS for Java is a free, open-source Java library — a FOSS implementation of an API for
+working with PSD and PSB files: loading documents, reading their header and layer metadata,
+changing a small set of layer properties, and saving the files again without rendering a pixel.
+It is an open-source PSD reader and layer-metadata editor for Java, not a rendering engine, a
+raster editor, or a replacement for the full commercial Aspose.PSD product.
 
-This project is a FOSS (Free and Open Source Software) implementation of Aspose.PSD for Java, providing a high-performance API for working with PSD and PSB files.
+## Navigation
 
-### Prerequisites
+- [At a Glance](#at-a-glance)
+- [Key Capabilities](#key-capabilities)
+- [Installation](#installation)
+- [Dependencies](#dependencies)
+- [Quick Start](#quick-start)
+- [API Reference](#api-reference)
+- [Documentation & Resources](#documentation--resources)
+- [Scope and Limitations](#scope-and-limitations)
+- [Development and Testing](#development-and-testing)
+- [License](#license)
 
-- Java 11 or higher
-- Maven 3.6 or higher
+## At a Glance
+
+```mermaid
+%%{init: {"flowchart": {"useMaxWidth": true}}}%%
+flowchart TD
+  subgraph StartingPoints["Starting Points"]
+    direction TB
+    i1["An existing PSD/PSB<br/>document (file<br/>or stream)"]
+  end
+  PRODUCT["Aspose.PSD FOSS<br/>for Java"]
+  subgraph Capabilities["Core Capabilities"]
+    direction TB
+    c1["Document and layer<br/>metadata inspection"]
+    c2["Layer name, visibility<br/>and opacity edits"]
+    c3["Raw-preserving save,<br/>no rendering"]
+  end
+  subgraph Outputs["Outputs"]
+    direction TB
+    o1["A PSD/PSB document<br/>(file or stream)"]
+  end
+  StartingPoints --> PRODUCT --> Capabilities --> Outputs
+```
+
+## Key Capabilities
+
+- Loads a PSD document, or an RGB PSB large-format document, from a file path with
+  `PsdImage.load(String)` or from a stream with `PsdImage.load(InputStream)`, and reads the header
+  properties `getWidth()`, `getHeight()`, `getBitsPerChannel()`, `getColorMode()`,
+  `getCompression()` and `getChannelsCount()`. RGB, CMYK and indexed-color PSD files load, and no
+  Photoshop installation is needed.
+- Reads every layer through `PsdImage.getLayers()`. Each `Layer` reports its `getName()`,
+  `isVisible()`, `getOpacity()`, `getClipping()`, `getBlendModeKey()` and its position —
+  `getLeft()`, `getTop()`, `getRight()` and `getBottom()` — together with read-only channel, mask
+  and blending-range information.
+- Changes layer metadata with `setName(String)`, `setVisible(boolean)` and `setOpacity(byte)`, and
+  writes the document back with `PsdImage.save(String)` or `PsdImage.save(OutputStream)`. The
+  position, clipping and blend-mode setters are also written; the library never touches the
+  layer's pixel data.
+- Saves with a raw-preserving strategy: in the library's own tests, a document saved without
+  changes is identical to the file that was loaded, and unedited sections are copied through
+  unchanged.
+- Lists the document's image resources — id, name and size — through `getImageResources()`;
+  their payloads are preserved on save but not exposed. Malformed input is reported with the
+  checked `PsdLoadException`.
+- Type names such as `PsdImage`, `Layer`, `BlendMode` and `ColorModes` follow Aspose.PSD naming;
+  the library covers only the subset described in this README.
 
 ## Installation
-
-### Maven
 
 Add the following dependency to your `pom.xml`:
 
 ```xml
 <dependency>
-    <groupId>org.aspose.psd</groupId>
-    <artifactId>aspose-psd-foss-java</artifactId>
-    <version>1.0.0</version>
+    <groupId>org.aspose</groupId>
+    <artifactId>aspose-psd-foss</artifactId>
+    <version>26.11.0</version>
 </dependency>
 ```
 
+Or build it from a clone of the repository:
+
+```bash
+git clone https://github.com/aspose-psd-foss/Aspose.PSD-FOSS-for-Java.git
+cd Aspose.PSD-FOSS-for-Java
+mvn clean verify -Dgpg.skip=true
+```
+
+The build runs the test suite and writes the library jars to `target/`. The `-Dgpg.skip=true` flag
+is required for a local build: the pom signs the jars at the `verify` phase with the Aspose release
+key, which only the release workflow holds, and without the flag the build stops with
+`No secret key`. Building needs a JDK 11 or
+later and Maven — see [Dependencies](#dependencies) for the full breakdown.
+
+## Dependencies
+
+### Required Package Dependencies
+
+No required third-party package dependencies. The `pom.xml` declares no compile-scope or
+runtime-scope dependency: PSD and PSB parsing and writing are implemented inside the library.
+
+### Native and System Requirements
+
+- Java 11 or later — the project compiles with `maven.compiler.release` set to `11`.
+- The `java.desktop` module, which provides `java.awt.Color`. The indexed-color palette classes
+  use it, so it is needed to load indexed-color documents.
+
+### Development Dependencies
+
+- `org.junit.jupiter:junit-jupiter` 5.10.2 — the JUnit 5 test framework, used only by the test
+  sources under `test/java`.
+
+It is declared in test scope and is never shipped with the library jar.
+
 ## Quick Start
 
-Below is a simple example of how to load a PSD file, inspect its layers, and save it back preserving all original data.
+Below is a simple example of how to load a PSD file, inspect its layers, change one layer's
+metadata, and save it back. Run it from the repository root, where `test/resources/` holds the
+sample documents:
 
 ```java
-import org.aspose.psd.ImageLoadOptions;
 import org.aspose.psd.PsdImage;
 import org.aspose.psd.layers.Layer;
 
 public class QuickStart {
     public static void main(String[] args) throws Exception {
-        // Load a PSD document
-        try (PsdImage psd = (PsdImage) PsdImage.load("sample.psd")) {
-            System.out.println("Width: " + psd.getWidth());
-            System.out.println("Height: " + psd.getHeight());
-            System.out.println("Number of layers: " + psd.getLayers().size());
+        try (PsdImage psd = PsdImage.load("test/resources/layer-variants.psd")) {
+            System.out.println(psd.getWidth() + " x " + psd.getHeight());
+            System.out.println("Color mode: " + psd.getColorMode());
 
-            // Iterate through layers and print basic info
-            for (Layer layer : psd.getLayers()) {
-                System.out.println("Layer: " + layer.getName() + ", Visible: " + layer.isVisible());
+            Layer[] layers = psd.getLayers();
+            System.out.println("Layers: " + layers.length);
+            for (Layer layer : layers) {
+                String name = layer.getName().isEmpty() ? "(unnamed)" : layer.getName();
+                System.out.println(name
+                        + " visible=" + layer.isVisible()
+                        + " opacity=" + (layer.getOpacity() & 0xFF));
             }
 
-            // Modify a layer property (e.g., set opacity to 50%)
-            if (!psd.getLayers().isEmpty()) {
-                Layer first = psd.getLayers().get(0);
-                first.setOpacity(128); // 0-255 range, 128 ≈ 50%
+            // Modify a layer property: rename it, hide it, and set its opacity to about 50%
+            if (layers.length > 0) {
+                Layer first = layers[0];
+                first.setName("Renamed layer");
+                first.setVisible(false);
+                first.setOpacity((byte) 128);
             }
 
-            // Save the PSD document – this will preserve all untouched sections byte‑exactly
-            psd.save("sample_modified.psd");
+            psd.save("output.psd");
         }
     }
 }
 ```
 
-This example demonstrates loading, basic inspection, a simple modification, and saving. The library preserves all unmodified sections, ensuring a byte‑exact round‑trip.
+This example demonstrates loading, basic inspection, a simple modification, and saving. The
+library preserves all unmodified sections as raw bytes, and in its own tests a document saved
+without changes is written back byte-for-byte on the bundled fixtures.
+
+`getOpacity()` returns a signed `byte`, so read it with `& 0xFF` to get the 0–255 value. A
+document with no layers returns an empty array from `getLayers()`, which the `layers.length > 0`
+check handles.
+
+## API Reference
+
+`PsdImage` is the library's entry point and `Layer` carries the editable per-layer metadata it
+returns from `getLayers()`; `ResourceBlock` and `PsdLoadException` cover image resources and load
+errors. The public surface spans 60 classes and enumerations across 7 modules, summarized below.
+
+<details>
+<summary>View the Full API Surface</summary>
+
+### Core API
+
+| Class | Description |
+|---|---|
+| `BigEndianReader` | Reads big-endian data from a stream. |
+| `BigEndianWriter` | Writes big-endian data to a stream. |
+| `Image` | Provides the Aspose.PSD-compatible base image entry point for loading PSD/PSB documents. |
+| `ImageLoader` | Provides static load methods that open a PSD or PSB file from a path or a stream. |
+| `LayerAndMaskSectionReader` | Reads PSD/PSB layer and mask information sections. |
+| `LayerAndMaskSectionWriter` | Writes PSD/PSB layer and mask information sections. |
+| `Point` | Represents an ordered pair of integer x- and y-coordinates that defines a point in a two-dimensional plane. |
+| `PsdImage` | Represents a PSD image that can be loaded, inspected, and saved without rendering. |
+| `PsdSectionReader` | Provides bounded reads for PSD/PSB sections that are stored in memory by this implementation. |
+| `Rectangle` | Stores a set of four integers that represent the location and size of a rectangle. |
+| `RectangleF` | Stores a set of four floating-point numbers that represent the location and size of a rectangle. |
+| `ResourceBlock` | Represents a PSD image resource block. |
+| `Size` | Represents an ordered pair of integer width and height values that defines a size. |
+| `StreamContainer` | Represents a stream container used by resource save APIs. |
+| `ColorModes` | Defines the color modes supported by PSD files. |
+| `CompressionMethod` | Defines the compression methods used for image data in PSD files. |
+| `PsdVersion` | Represents the supported PSD container versions. |
+| `ResourceBlockState` | Represents resource block state. |
+
+### Core Exceptions
+
+| Class | Description |
+|---|---|
+| `PsdLoadException` | Exception that is thrown when an error occurs while loading a PSD file. |
+| `PsdSaveException` | Exception that is thrown when an error occurs while saving a PSD file. |
+
+### Layers
+
+| Class | Description |
+|---|---|
+| `BlendRange` | Represents a PSD layer blend range. |
+| `ChannelInformation` | Describes one layer channel: its channel id and data length; the compression value it reports for a loaded channel is always `Raw`. |
+| `GlobalLayerMaskInfo` | Represents global layer mask information. |
+| `Layer` | Represents a single PSD layer with basic metadata used by the FOSS library. |
+| `LayerBlendModeMapper` | Converts between the BlendMode enum and the four-character blend mode key stored in a PSD file. |
+| `LayerBlendingRangesData` | Represents PSD layer blending ranges data. |
+| `LayerBlendingRangesInfo` | Provides a read-only summary of the parsed layer blending ranges subsection. |
+| `LayerChannelInfo` | Stores one channel metadata entry from a layer record. |
+| `LayerMaskData` | Defines the base class for PSD layer mask data. |
+| `LayerMaskDataShort` | Defines layer mask data for layers that have only a raster or vector mask. |
+| `LayerMaskInfo` | Provides a read-only summary of the parsed layer mask subsection. |
+| `LayerRawData` | Holds raw layer data parsed from a PSD file. |
+| `LayerRecordReader` | Reads one layer record from a PSD or PSB file. |
+| `LayerRecordWriter` | Writes PSD/PSB layer records from the in-memory layer model. |
+| `LayerResource` | Represents a PSD layer resource. |
+| `PsdLayerChannelInfo` | Provides a read-only summary of one parsed layer channel record. |
+| `RawLayerMaskSection` | Keeps the raw bytes of a layer mask section. |
+| `BlendMode` | Defines the blend modes used for layers in PSD files. |
+| `LayerMaskFlags` | Flags of a layer mask. |
+
+### Loaders
+
+| Class | Description |
+|---|---|
+| `PsdImageLoader` | Loads the sections of a PSD or PSB document from an input stream. |
+
+### Resources
+
+| Class | Description |
+|---|---|
+| `ImageResourceIds` | Provides common PSD image resource identifiers used by tests and fixtures. |
+| `IndexedColorPalette` | The palette of an indexed-color document, parsed from the color mode data. |
+| `IndexedColorPaletteInfo` | Provides a read-only view over an indexed-color PSD palette. |
+| `PreservedResourceBlock` | Adapts a raw-preserved image resource to the official ResourceBlock surface. |
+| `PsdResourceInfo` | Provides a read-only summary of one parsed PSD image resource block. |
+| `UnknownResource` | Represents a parsed PSD image resource block without any ID-specific semantics. |
+| `PsdResourceKind` | Identifies the semantic classification exposed for an image resource block. |
+
+### Sections
+
+| Class | Description |
+|---|---|
+| `ColorData` | Represents the Color Mode Data section of a PSD file. |
+| `ImageData` | Stores the PSD Image Data section as a compression header plus raw payload bytes. |
+| `ImageDataStructure` | Describes the validated structural layout of the PSD Image Data payload. |
+| `ImageResourcesSection` | Holds the parsed Image Resources section of a PSD or PSB file. |
+| `LayerAndMaskSection` | Represents the PSD/PSB Layer and Mask Information section and its raw-preserved save state. |
+| `PsdColorDataInfo` | Provides a read-only view over the Color Mode Data section. |
+| `PsdHeader` | Contains the header information of a Photoshop document. |
+| `PsdImageDataInfo` | Provides a read-only summary of the PSD merged image data structure. |
+| `PsdImageDocumentState` | Stores parsed PSD/PSB document sections used by PsdImage. |
+| `ImageDataKind` | Identifies the structural shape of the PSD Image Data payload. |
+| `PsdColorDataKind` | Describes how the Color Mode Data payload was interpreted for the loaded document. |
+| `SeekOrigin` | Reference point for the seek operations of BigEndianReader and BigEndianWriter. |
+
+### Write Descriptors
+
+| Class | Description |
+|---|---|
+| `PsdImageWriter` | Writes the sections of a PSD or PSB document to an output stream. |
+
+</details>
 
 ## Documentation & Resources
 
-* **[API Reference (Javadoc)](https://javadoc.io/doc/org.aspose.psd/aspose-psd-foss-java/latest/index.html)** – Detailed Javadoc for all public classes and methods.
-* **[Getting Started Guide](https://products.aspose.org/psd/java/)** – Overview of loading, inspection and saving in Java.
-* **[Knowledge Base](https://kb.aspose.org/psd/java/)** – FAQs, troubleshooting and how‑to articles.
-* **[GitHub Repository](https://github.com/aspose-psd-foss/Aspose.PSD-FOSS-for-Java)** – Source code, issue tracker and contribution guide.
+- **[API Reference](https://reference.aspose.org/psd/java/)** — detailed reference for all 60
+  public classes and methods (the [API reference](#api-reference) section above covers the
+  essentials).
+- **[Getting Started Guide](https://docs.aspose.org/psd/java/getting-started/)** — an overview of
+  loading, inspection and saving in Java, with developer guides for layers, image resources and
+  errors.
+- **[Knowledge Base](https://kb.aspose.org/psd/java/)** — FAQs, troubleshooting and how-to
+  articles.
+- **[GitHub Repository](https://github.com/aspose-psd-foss/Aspose.PSD-FOSS-for-Java)** — source
+  code and issue tracker;
+  [open an issue](https://github.com/aspose-psd-foss/Aspose.PSD-FOSS-for-Java/issues) for a bug or
+  a feature request.
+- **[Product page](https://products.aspose.org/psd/java/)** — an overview of what the library does
+  and where it fits.
+- **[Maven Central](https://central.sonatype.com/artifact/org.aspose/aspose-psd-foss)** — release
+  history and the published artifacts.
+- **[PUBLISHING.md](PUBLISHING.md)** — how releases of this library are built and published.
 
 ## Scope and Limitations
 
-* **Supported formats** – Adobe Photoshop `.psd` (up to 30 000 px) and `.psb` (up to 300 000 px) containers are fully supported.
-* **No pixel rendering** – The library provides structural access and metadata; rasterization of pixel data is not included.
-* **Read‑only mask and blending‑range data** – Modifying mask data or blending ranges is currently not supported.
-* **Color mode support** – Indexed palette, RGB and CMYK payloads are parsed; other modes are preserved as raw data.
-* **Compression** – RAW, RLE and ZIP (with/without prediction) image data structures are supported.
+- **Structural inspection and limited editing only — not a rendering engine.** The library does
+  not render images, export to PNG or JPEG, convert formats, or decode pixels.
+- **Seven setters are present for API shape only and always throw `UnsupportedOperationException`:**
+  `PsdImage.setActiveLayer`, `PsdImage.setImageResources`, `PsdImage.setGlobalLayerResources`,
+  `PsdImage.setHasTransparencyData`, `Layer.setChannelInformation`, `Layer.setLayerMaskData` and
+  `Layer.setLayerBlendingRangesData`. Mask and blending-range data are therefore read-only.
+- **Adding, removing or reordering layers through `setLayers` is not a supported edit.** Passing
+  the same array back is accepted, but it counts as a layer edit, so the writer then rewrites
+  every layer record instead of copying the loaded bytes; a shorter or reordered array is saved
+  with the original channel data and can leave the file inconsistent.
+- **Layer names are saved as ASCII text of at most 255 characters.** A non-ASCII character is
+  saved as `?`, a longer name makes `save` fail with a `RuntimeException` caused by
+  `PsdSaveException`, and a PSD file's separate Unicode name block is left unchanged, so other
+  tools may still show the old name after a rename. Do not edit documents whose layer names
+  contain non-ASCII characters.
+- **`getVersion()` always returns `6` (`setVersion` accepts only `6`), and `PsdImage` does not
+  report whether a file is a PSD or a PSB.** `setColorMode` rewrites the header's color mode on
+  save without converting any pixel data. `getActiveLayer()` returns the first layer, or `null` when there are no layers, not the
+  active layer stored in the file.
+- **Image resources are read-only.** `getImageResources()` returns new `PreservedResourceBlock`
+  objects on every call, and their `save(OutputStream)` always throws
+  `UnsupportedOperationException`.
+- **Supported formats, color modes and compression.** Adobe Photoshop `.psd` (up to 30000 px)
+  and `.psb` (up to 300000 px) containers load; indexed palette, RGB and CMYK payloads are parsed;
+  and image data stored as RAW, RLE or ZIP (with or without prediction) is recognised and preserved
+  as raw bytes — it is never decoded. The library provides structural access and metadata;
+  rasterization of pixel data is not included.
+- **Load enforces PSD/PSB header limits.** The channel count must be 1–56, the bit depth 1, 8, 16
+  or 32, and the width and height at most 30000 pixels (PSD) or 300000 pixels (PSB); anything
+  else throws `PsdLoadException`. `load(InputStream)` copies the whole stream into memory, does
+  not close it, and declares the checked `PsdLoadException`, while `load(String)` wraps it in a
+  `RuntimeException`.
+
+These limitations apply only to Aspose.PSD FOSS — they don't carry over to
+[Aspose.PSD — Enterprise Edition](https://products.aspose.com/psd/), which adds rendering,
+editing, and format conversion.
 
 ## Development and Testing
 
-To build and run the test suite locally:
+Run the test suite from the repository root:
 
 ```bash
-# Clone the repository (if not already done)
-git clone https://github.com/aspose-psd-foss/Aspose.PSD-FOSS-for-Java.git
-cd Aspose.PSD-FOSS-for-Java
-
-# Build the project and run tests
-mvn clean verify
+mvn clean verify -Dgpg.skip=true
 ```
 
-The test suite includes unit tests for header parsing, color data, image data structures, layer handling, resource parsing, and byte‑exact round‑trip verification.
-## Building from source
-
-### Clone the repository
-
-```bash
- git clone https://github.com/aspose-psd-foss/Aspose.PSD-FOSS-for-Java.git
- cd Aspose.PSD-FOSS-for-Java
-```
-
-### Build the project
-
-```bash
-mvn clean install
-```
-
-### Build Javadoc
+The tests are JUnit 5 tests under `test/java` and use the sample documents in `test/resources/`;
+they cover header parsing, color data, layer handling, image-resource parsing, and byte-exact
+round-trip saves. To build the Javadoc, run:
 
 ```bash
 mvn javadoc:javadoc
 ```
 
-## Contributing
+The release workflow lives in
+[`.github/workflows/maven-central-release.yml`](.github/workflows/maven-central-release.yml).
 
-We welcome contributions! Please follow these steps:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+To contribute, fork the repository, create a feature branch, commit your changes, push the
+branch, and open a pull request against `main`.
 
 ## License
 
-This project is licensed under the MIT License.
-
-## Contact
-
- - Project URL: [https://github.com/aspose-psd-foss/Aspose.PSD-FOSS-for-Java](https://github.com/aspose-psd-foss/Aspose.PSD-FOSS-for-Java)
-- Email: psd@aspose.com
+This project is licensed under the [MIT License](LICENSE). The MIT License permits use, copying, modification, distribution, sublicensing, and commercial use, provided its copyright and permission notice are retained. The software is provided without warranty.
